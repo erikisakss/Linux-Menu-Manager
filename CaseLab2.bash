@@ -5,11 +5,11 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 MenuFunction(){
-
-declare x 
-until [ $x == "ex" ]
+#Initialize the x variable before the loop
+declare x
+while [[ $x != "ex" ]];
 do
-    read x
+    
     clear
     echo "##########################################################################"
     echo "                              SYSTEM MANAGER                              "
@@ -36,7 +36,8 @@ do
     #Maste satta x till nagot annars far den damp i loopen.
 
 
-
+echo -e "\nChoose a command: "
+read x
 
 case $x in
 
@@ -291,7 +292,7 @@ ListGroup(){
     #Go back to main menu if you picked the wrong function
     echo -e "\nPress any key to go back to the main menu"
     read -n 1 -s
-    MainMenu
+    
     
     
    
@@ -396,18 +397,28 @@ clear
 echo "Which directory would you like to add a folder in? "
 read directory
 ls -l $directory
+#RETURN=$?
+#if [[ $RETURN == 0 ]]; then
+ #   echo "Enter a name for the folder: "
+  #  read name
+   # mkdir $directory/$name
+    #RETURN=$?
+    #if [[ $RETURN == 0 ]]; then
+     #   echo "Folder named $name is created!"
+    #elif
+     #   echo "Folder could not be created!"
+    
+#fi
+echo "Enter a name for the folder: "
+read name
+mkdir $directory/$name
 RETURN=$?
 if [[ $RETURN == 0 ]]; then
-    echo "Enter a name for the folder: "
-    read name
-    mkdir $directory/$name
-    RETURN=$?
-    if [[ $RETURN == 0 ]];; then
-        echo "Folder named $name is created!"
-    elif
-        echo "Folder could not be created!"
-    fi
+    echo "Folder named $name is created!"
+else
+    echo "Folder could not be created!"
 fi
+
 
 
 }
@@ -574,10 +585,200 @@ echo "Last modified: $lastmodified"
 
 }
 FolderModify(){
+  #Modify the permissions of the folder
+    echo "Enter the folder you want to modify: "
+    read folder
+#Do you want to change permissions for owner, group, others or multiple permissions at once?
+#Should be in a case
+
+declare answer
+while [[ $answer != "exit"  ]]; 
+do
+echo "Do you want to change permissions for owner, group, others or do you want to activate Sticky bit or setgid? (u/g/a/sbit/sgid)"
+read answer
+case $answer in
+    u)
+    echo "Do you want to add or remove permissions? (a/r)"
+    read answer
+    if [[ $answer == "a" ]]; then
+        echo "Do you want to add read, write or execute permissions? (r/w/x)"
+        read answer
+        if [[ $answer == "r" ]]; then
+            chmod u+r $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "w" ]]; then
+            chmod u+w $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "x" ]]; then
+            chmod u+x $folder
+            echo "Permissions have been changed"
+        else
+            echo "Invalid input"
+        fi
+    elif [[ $answer == "r" ]]; then
+        echo "Do you want to remove read, write or execute permissions? (r/w/x)"
+        read answer
+        if [[ $answer == "r" ]]; then
+            chmod u-r $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "w" ]]; then
+            chmod u-w $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "x" ]]; then
+            chmod u-x $folder
+            echo "Permissions have been changed"
+        else
+            echo "Invalid input"
+        fi
+    else
+        echo "Invalid input"
+    fi
+    ;;
+    g)
+    echo "Do you want to add or remove permissions? (a/r)"
+    read answer
+    if [[ $answer == "a" ]]; then
+        echo "Do you want to add read, write or execute permissions? (r/w/x)"
+        read answer
+        if [[ $answer == "r" ]]; then
+            chmod g+r $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "w" ]]; then
+            chmod g+w $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "x" ]]; then
+            chmod g+x $folder
+            echo "Permissions have been changed"
+        else
+            echo "Invalid input"
+        fi
+    elif [[ $answer == "r" ]]; then
+        echo "Do you want to remove read, write or execute permissions? (r/w/x)"
+        read answer
+        if [[ $answer == "r" ]]; then
+            chmod g-r $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "w" ]]; then
+            chmod g-w $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "x" ]]; then
+            chmod g-x $folder
+            echo "Permissions have been changed"
+        else
+            echo "Invalid input"
+        fi
+    else
+        echo "Invalid input"
+    fi
+    ;;
+a)
+    echo "Do you want to add or remove permissions? (a/r)"
+    read answer
+    if [[ $answer == "a" ]]; then
+        echo "Do you want to add read, write or execute permissions? (r/w/x)"
+        read answer
+        if [[ $answer == "r" ]]; then
+            chmod o+r $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "w" ]]; then
+            chmod o+w $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "x" ]]; then
+            chmod o+x $folder
+            echo "Permissions have been changed"
+        else
+            echo "Invalid input"
+        fi
+    elif [[ $answer == "r" ]]; then
+        echo "Do you want to remove read, write or execute permissions? (r/w/x)"
+        read answer
+        if [[ $answer == "r" ]]; then
+            chmod o-r $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "w" ]]; then
+            chmod o-w $folder
+            echo "Permissions have been changed"
+        elif [[ $answer == "x" ]]; then
+            chmod o-x $folder
+            echo "Permissions have been changed"
+        else
+            echo "Invalid input"
+        fi
+    else
+        echo "Invalid input"
+    fi
+    ;;
+sbit)
+    echo "Do you want to activate or deactivate Sticky bit? (a/d)"
+    read answer
+    if [[ $answer == "a" ]]; then
+        chmod +t $folder
+        echo "Sticky bit has been activated"
+    elif [[ $answer == "d" ]]; then
+        chmod -t $folder
+        echo "Sticky bit has been deactivated"
+    else
+        echo "Invalid input"
+    fi
+    ;;
+sgid)
+    echo "Do you want to activate or deactivate setgid? (a/d)"
+    read answer
+    if [[ $answer == "a" ]]; then
+        chmod +s $folder
+        echo "setgid has been activated"
+    elif [[ $answer == "d" ]]; then
+        chmod -s $folder
+        echo "setgid has been deactivated"
+    else
+        echo "Invalid input"
+    fi
+    ;;
+exit)
+    echo "Exiting"
+    exit
+    ;;
+*)
+    echo "Invalid input"
+    ;;
+esac
+
+done
     
+    
+
 }
 FolderDelete(){
- 
+#If the folder is empty
+#Select the folder
+echo "Enter the folder you want to delete: "
+read folder
+if [[ -z $(ls -A $folder) ]]; then
+    echo "The folder is empty"
+    echo "Do you want to delete the folder? (y/n)"
+    read answer
+    if [[ $answer == "y" ]]; then
+        rm -r $folder
+        echo "The folder has been deleted"
+    elif [[ $answer == "n" ]]; then
+        echo "The folder has not been deleted"
+    else
+        echo "Invalid input"
+fi
+#If the folder is not empty
+else
+    echo "The folder is not empty"
+    echo "Do you want to delete the folder? (y/n)"
+    read answer
+    if [[ $answer == "y" ]]; then
+        rm -r $folder
+        echo "The folder has been deleted"
+    elif [[ $answer == "n" ]]; then
+        echo "The folder has not been deleted"
+    else
+        echo "Invalid input"
+    fi
+fi
 }
 
 NetworkFunction(){
@@ -610,99 +811,8 @@ echo "STATUS = $STATUS"
 done
 
 }
+MenuFunction
 
 
 
 
-
-
-#Maste satta x till nagot annars far den damp i loopen.
-x="1"
-until [ $x == "ex" ]
-do
-read x
-case $x in
-
-ni)
-#FUNKTION
-;;
-
-au)
-#FUNKTION
-;;
-
-lu)
-#FUNKTION
-;;
-
-vu)
-#FUNKTION
-;;
-
-mu)
-#FUNKTION
-;;
-
-du)
-#FUNKTION
-;;
-
-ag)
-#FUNKTION
-;;
-
-lg)
-#FUNKTION
-;;
-
-vg)
-#FUNKTION
-;;
-
-mg)
-#FUNKTION
-;;
-
-dg)
-#FUNKTION
-;;
-
-af)
-#FUNKTION
-;;
-
-lf)
-#FUNKTION
-;;
-
-vf)
-#FUNKTION
-;;
-
-mf)
-#FUNKTION
-;;
-
-df)
-#FUNKTION
-;;
-
-ex)
-echo "Shuting down program..."
-sleep 2
-echo "..."
-sleep 2
-echo ".."
-sleep 2
-echo "."
-sleep 1 
-echo "bye!"
-;;
-
-*)
-echo "Enter a valid command!"
-;;
-
-esac
-
-done
