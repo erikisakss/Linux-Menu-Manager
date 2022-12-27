@@ -136,6 +136,7 @@ echo "bye!"
 
 *)
 echo "Enter a valid command!"
+BackToMenu
 ;;
 
 esac
