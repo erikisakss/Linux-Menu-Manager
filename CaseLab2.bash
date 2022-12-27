@@ -783,7 +783,7 @@ fi
 
 NetworkFunction(){
 clear
-echo "Computer name = $(hostname)"
+echo -e "${GREEN}Computer name${NC} = $(hostname)"
 #En for loop for att displaya alla interfaces forutom loopback
 for INTERFACES in $(ip -br addr | awk '{print $1}' | grep -v 'lo'); do
 
@@ -792,9 +792,7 @@ IP=$(ip -br addr | grep "$INTERFACES" | awk '{print $3}' | cut -d '/' -f 1)
 GATE=$(ip -4 route show default | grep "$INTERFACES" | cut -d ' ' -f 3 | tail -)
 STATUS=$(cat /sys/class/net/"$INTERFACES"/operstate)
 
-#echo "IP address: $(ip route get 1.2.3.4 | awk '{print $7}')"
-#echo "MAC address: $(ip -o link show | cut -d ' ' -f2,20 | grep -v 'lo' | cut ->
-#echo "INTERFACE: $(ip -br addr | awk '{print $1}' | grep -v 'lo')"
+#Flaggan (-z) testar om string = 0, om string = 0 sa ar det TRUE. dvs if far arbeta
 if [[ -z "$IP" ]]; then
     IP="NONE"
 fi
@@ -804,15 +802,15 @@ if [[ -z "$GATE" ]]; then
 fi
 
 
-echo "IP = $IP"
-echo "MAC = $MAC"
-echo "GATE = $GATE"
-echo "STATUS = $STATUS"
+echo -e "\n${GREEN}IP${NC} = $IP"
+echo -e "\n${GREEN}MAC${NC} = $MAC"
+echo -e "\n${GREEN}GATE${NC} = $GATE"
+echo -e "\n${GREEN}STATUS${NC} = $STATUS"
 
 done
-#Använder read for att pausa funktionen.
-echo "Press enter to go back to the menu"
+echo -e "\nPress ${RED}ENTER${NC} to enter menu"
 read x
+
 }
 MenuFunction
 
