@@ -42,83 +42,84 @@ read x
 case $x in
 
 ni)
-#FUNKTION
 NetworkFunction
+BackToMenu
 ;;
 
 au)
 AddUserFunction
-#FUNKTION
+BackToMenu
 ;;
 
 lu)
-#FUNKTION
 ListUserFunction
+BackToMenu
 ;;
 
 vu)
-#FUNKTION
 ListUserAttributes
+BackToMenu
 ;;
 
 mu)
 ModifyUserFunction
-#FUNKTION
+BackToMenu
 ;;
 
 du)
 DeleteUser
-#FUNKTION
+BackToMenu
 ;;
 
 ag)
 AddGroup
-#FUNKTION
+BackToMenu
 ;;
 
 lg)
 ListGroup
-#FUNKTION
+BackToMenu
 ;;
 
 vg)
 ViewGroup
-#FUNKTION
+BackToMenu
 ;;
 
 mg)
 ModifyGroup
-#FUNKTION
+BackToMenu
 ;;
 
 dg)
 DeleteGroup
-#FUNKTION
+BackToMenu
 ;;
 
 af)
 FolderAdd
 #FUNKTION
+BackToMenu
 ;;
 
 lf)
 FolderList
-#FUNKTION
+BackToMenu
 ;;
 
 vf)
 FolderView
-#FUNKTION
+BackToMenu
 ;;
 
 mf)
 FolderModify
-#FUNKTION
+BackToMenu
 ;;
 
 df)
 FolderDelete
-#FUNKTION
+BackToMenu
 ;;
 
 ex)
@@ -808,10 +809,16 @@ echo -e "\n${GREEN}GATE${NC} = $GATE"
 echo -e "\n${GREEN}STATUS${NC} = $STATUS"
 
 done
-echo -e "\nPress ${RED}ENTER${NC} to enter menu"
-read x
 
 }
+
+BackToMenu(){
+echo -e "\nPress ${RED}ENTER${NC} to enter menu"
+read x
+}
+
+
+
 MenuFunction
 
 
