@@ -782,7 +782,8 @@ fi
 }
 
 NetworkFunction(){
-echo "Computer name: $hostname"
+clear
+echo "Computer name = $(hostname)"
 #En for loop for att displaya alla interfaces forutom loopback
 for INTERFACES in $(ip -br addr | awk '{print $1}' | grep -v 'lo'); do
 
@@ -809,7 +810,9 @@ echo "GATE = $GATE"
 echo "STATUS = $STATUS"
 
 done
-
+#Använder read for att pausa funktionen.
+echo "Press enter to go back to the menu"
+read x
 }
 MenuFunction
 
