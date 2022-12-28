@@ -1,4 +1,3 @@
-
 #!/bin/bash
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -755,12 +754,13 @@ FolderDelete(){
 #Select the folder
 echo "Enter the folder you want to delete: "
 read folder
-if [[ -z $(ls -A $folder) ]]; then
+FolderDirectory=find / -type d -name $folder
+if [[ -z $(ls -A $FolderDirectory) ]]; then
     echo "The folder is empty"
     echo "Do you want to delete the folder? (y/n)"
     read answer
     if [[ $answer == "y" ]]; then
-        rm -r $folder
+        rm -r $FolderDirectory
         echo "The folder has been deleted"
     elif [[ $answer == "n" ]]; then
         echo "The folder has not been deleted"
@@ -773,7 +773,7 @@ else
     echo "Do you want to delete the folder? (y/n)"
     read answer
     if [[ $answer == "y" ]]; then
-        rm -r $folder
+        rm -r $FolderDirectory
         echo "The folder has been deleted"
     elif [[ $answer == "n" ]]; then
         echo "The folder has not been deleted"
@@ -821,7 +821,3 @@ read x
 
 
 MenuFunction
-
-
-
-
