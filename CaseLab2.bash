@@ -3,6 +3,11 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
 MenuFunction(){
 #Initialize the x variable before the loop
 declare x
