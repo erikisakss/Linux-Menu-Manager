@@ -434,24 +434,31 @@ FolderList(){
 clear
 echo "Which directory would you like to view? "
 read directory
-ls -l $directory
+ls -l $directory | cut -f " "
 
 }
 FolderView(){
 #Select which directory you want to view and view all properties of the folder
-echo "Which directory is the folder you would like to view in?"
-read directory
-ls -l $directory
-#Lists all folder properties
 clear
+declare yesOrNo
+#Lists all folder properties
+while [[ $yesOrNo != "y" ]];
+do
 echo "Which folder would you like to view? "
 read folder
+local FolderDirectory=$(find / -type d -name $folder)
+clear
+echo $FolderDirectory
+echo -e "Is this the folder you would like to view y/n? " 
+read yesOrNo
+done
 #List owner of the folder
-owner=$(ls -ld $folder | awk '{print $3}')
+local owner=$(ls -ld $FolderDirectory | awk '{print $3}')
 #List group of the folder
-group=$(ls -ld $folder | awk '{print $4}')
+local group=$(ls -ld $FolderDirectory | awk '{print $4}')
 #List permissions of the folder
-ownerpermissions=$(echo $permissions | cut -c 2,3,4)
+local permissions=$(ls -ld $FolderDirectory)
+local ownerpermissions=$(echo $permissions | cut -c 2,3,4)
 if  [[ $ownerpermissions == "rwx" ]]; then
     ownerpermissions=$(echo "Owner has read, write and execute permissions")
 elif [[ $ownerpermissions == "rw-" ]]; then
@@ -487,6 +494,7 @@ elif [[ $ownerpermissions == "--S" ]]; then
 
 
 fi
+#Buggar i svaren på grouppermissions när jag kallar funktionen svarar just nu r-s
 grouppermissons=$(echo $permissions | cut -c 5,6,7)
 if  [[ $grouppermissons == "rwx" ]]; then
     grouppermissons=$(echo "Group has read, write and execute permissions")
@@ -506,9 +514,9 @@ elif [[ $grouppermissons == "---" ]]; then
     grouppermissons=$(echo "Group has no permissions")
 elif [[ $grouppermissons == "rws" ]]; then
     grouppermissons=$(echo "Group has read, write and execute permissions and the setgid bit is set")
-elif [[$grouppermissions == "r-s"]]; then
+elif [[ $grouppermissions == "r-s" ]]; then
     grouppermissons=$(echo "Group has read and execute permissions and the setgid bit is set")
-elif [[$grouppermissions == "r-S"]]; then
+elif [[ $grouppermissions == "r-S" ]]; then
     grouppermissons=$(echo "Group has read permissions and the setgid bit is set")
 elif [[ $grouppermissons == "rwS" ]]; then
     grouppermissons=$(echo "Group has read and write permissions and the setgid bit is set")
@@ -540,7 +548,7 @@ elif [[ $otherpermissions == "---" ]]; then
     otherpermissions=$(echo "Others has no permissions")
 elif [[ $otherpermissions == "rwt" ]]; then
     otherpermissions=$(echo "Others has read, write and execute permissions and the sticky bit is set")
-elif [[$otherpermissions == "r-t"]] ; then
+elif [[ $otherpermissions == "r-t" ]] ; then
     otherpermissions=$(echo "Others has read and execute permissions and the sticky bit is set")
 elif [[ $otherpermissions == "r-T" ]]; then
     otherpermissions=$(echo "Others has read permissions and the sticky bit is set")
@@ -556,11 +564,11 @@ elif [[ $otherpermissions == "--T" ]]; then
     otherpermissions=$(echo "Others has no permissions and the sticky bit is set")
 fi
 #List size of the folder
-size=$(ls -ld $folder | awk '{print $5}')
+size=$(ls -ld $FolderDirectory | awk '{print $5}')
 #List when the folder was last modified
-lastmodified=$(ls -ld $folder | awk '{print $6,$7,$8}')
+lastmodified=$(ls -ld $FolderDirectory | awk '{print $6,$7,$8}')
 #If sticky bit is set
-stickybit=$(ls -ld $folder | awk '{print $1}' | cut -c 9)
+stickybit=$(ls -ld $FolderDirectory | awk '{print $1}' | cut -c 10)
 if [[ $stickybit == "t" ]]; then
     stickybit=$(echo "Yes")
 elif [[ $stickybit == "T" ]]; then
@@ -570,7 +578,7 @@ else
 fi
 
 #If setgid is set
-setgid=$(ls -ld $directory | awk '{print $1}' | cut -c 6)
+setgid=$(ls -ld $FolderDirectory | awk '{print $1}' | cut -c 7)
 if [[ $setgid == "s" ]]; then
     setgid=$(echo "Yes")
 elif [[ $setgid == "S" ]]; then
@@ -584,6 +592,8 @@ echo "Group: $group"
 echo "Owner permissions: $ownerpermissions"
 echo "Group permissions: $grouppermissons"
 echo "Others permissions: $otherpermissions" 
+echo "Sticky bit: $stickybit"
+echo "Setgid: $setgid"
 echo "Size: $size"
 echo "Last modified: $lastmodified"
 
@@ -594,6 +604,7 @@ FolderModify(){
   #Modify the permissions of the folder
     echo "Enter the folder you want to modify: "
     read folder
+    FolderDirectory=$(find / -type d -name $folder)
 #Do you want to change permissions for owner, group, others or multiple permissions at once?
 #Should be in a case
 
@@ -610,13 +621,13 @@ case $answer in
         echo "Do you want to add read, write or execute permissions? (r/w/x)"
         read answer
         if [[ $answer == "r" ]]; then
-            chmod u+r $folder
+            chmod +r $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "w" ]]; then
-            chmod u+w $folder
+            chmod +w $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "x" ]]; then
-            chmod u+x $folder
+            chmod +x $FolderDirectory
             echo "Permissions have been changed"
         else
             echo "Invalid input"
@@ -625,13 +636,13 @@ case $answer in
         echo "Do you want to remove read, write or execute permissions? (r/w/x)"
         read answer
         if [[ $answer == "r" ]]; then
-            chmod u-r $folder
+            chmod -r $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "w" ]]; then
-            chmod u-w $folder
+            chmod -w $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "x" ]]; then
-            chmod u-x $folder
+            chmod -x $FolderDirectory
             echo "Permissions have been changed"
         else
             echo "Invalid input"
@@ -647,13 +658,13 @@ case $answer in
         echo "Do you want to add read, write or execute permissions? (r/w/x)"
         read answer
         if [[ $answer == "r" ]]; then
-            chmod g+r $folder
+            chmod g+r $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "w" ]]; then
-            chmod g+w $folder
+            chmod g+w $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "x" ]]; then
-            chmod g+x $folder
+            chmod g+x $FolderDirectory
             echo "Permissions have been changed"
         else
             echo "Invalid input"
@@ -662,13 +673,13 @@ case $answer in
         echo "Do you want to remove read, write or execute permissions? (r/w/x)"
         read answer
         if [[ $answer == "r" ]]; then
-            chmod g-r $folder
+            chmod g-r $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "w" ]]; then
-            chmod g-w $folder
+            chmod g-w $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "x" ]]; then
-            chmod g-x $folder
+            chmod g-x $FolderDirectory
             echo "Permissions have been changed"
         else
             echo "Invalid input"
@@ -684,13 +695,13 @@ a)
         echo "Do you want to add read, write or execute permissions? (r/w/x)"
         read answer
         if [[ $answer == "r" ]]; then
-            chmod o+r $folder
+            chmod o+r $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "w" ]]; then
-            chmod o+w $folder
+            chmod o+w $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "x" ]]; then
-            chmod o+x $folder
+            chmod o+x $FolderDirectory
             echo "Permissions have been changed"
         else
             echo "Invalid input"
@@ -699,13 +710,13 @@ a)
         echo "Do you want to remove read, write or execute permissions? (r/w/x)"
         read answer
         if [[ $answer == "r" ]]; then
-            chmod o-r $folder
+            chmod o-r $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "w" ]]; then
-            chmod o-w $folder
+            chmod o-w $FolderDirectory
             echo "Permissions have been changed"
         elif [[ $answer == "x" ]]; then
-            chmod o-x $folder
+            chmod o-x $FolderDirectory
             echo "Permissions have been changed"
         else
             echo "Invalid input"
@@ -718,10 +729,10 @@ sbit)
     echo "Do you want to activate or deactivate Sticky bit? (a/d)"
     read answer
     if [[ $answer == "a" ]]; then
-        chmod +t $folder
+        chmod +t $FolderDirectory
         echo "Sticky bit has been activated"
     elif [[ $answer == "d" ]]; then
-        chmod -t $folder
+        chmod -t $FolderDirectory
         echo "Sticky bit has been deactivated"
     else
         echo "Invalid input"
@@ -731,18 +742,17 @@ sgid)
     echo "Do you want to activate or deactivate setgid? (a/d)"
     read answer
     if [[ $answer == "a" ]]; then
-        chmod +s $folder
+        chmod +s $FolderDirectory
         echo "setgid has been activated"
     elif [[ $answer == "d" ]]; then
-        chmod -s $folder
+        chmod -s $FolderDirectory
         echo "setgid has been deactivated"
     else
         echo "Invalid input"
     fi
     ;;
 exit)
-    echo "Exiting"
-    exit
+    BackToMenu
     ;;
 *)
     echo "Invalid input"
