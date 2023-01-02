@@ -604,7 +604,7 @@ FolderModify(){
   #Modify the permissions of the folder
     echo "Enter the folder you want to modify: "
     read folder
-    FolderDirectory=$(find / -type d -name $folder)
+    FolderDirectory=$(find / -type d -name $folder -print -quit 2>/dev/null)
 #Do you want to change permissions for owner, group, others or multiple permissions at once?
 #Should be in a case
 
@@ -769,7 +769,7 @@ FolderDelete(){
 #Select the folder
 echo "Enter the folder you want to delete: "
 read folder
-FolderDirectory=find / -type d -name $folder
+FolderDirectory=$(find / -type d -name $folder -print -quit 2>/dev/null)
 if [[ -z $(ls -A $FolderDirectory) ]]; then
     echo "The folder is empty"
     echo "Do you want to delete the folder? (y/n)"
