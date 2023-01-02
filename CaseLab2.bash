@@ -261,7 +261,7 @@ while [[ $info != "exit" ]];
     #Exits the menu
     exit)
     echo "Exiting Modification Menu"
-    exit
+    
     ;;
     #If the input is invalid
     *)
@@ -269,7 +269,7 @@ while [[ $info != "exit" ]];
     ;; 
     esac
 done    
-
+BackToMenu
 }
 
 
@@ -611,9 +611,28 @@ FolderModify(){
 declare answer
 while [[ $answer != "exit"  ]]; 
 do
-echo "Do you want to change permissions for owner, group, others or do you want to activate Sticky bit or setgid? (u/g/a/sbit/sgid)"
+echo "co - Change owner"
+echo "cg - Change group"
+echo "u - Change permissions for owner"
+echo "g - Change permissions for group"
+echo "a - Change permissions for others"
+echo "sbit - Modify sticky bit"
+echo "sgid - Modify setgid"
+echo "exit - Exit"
 read answer
 case $answer in
+    co)
+    echo "Enter the new owner: "
+    read newowner
+    chown $newowner $FolderDirectory
+    echo "Owner has been changed"
+    ;;
+    cg)
+    echo "Enter the new group: "
+    read newgroup
+    chgrp $newgroup $FolderDirectory
+    echo "Group has been changed"
+    ;;
     u)
     echo "Do you want to add or remove permissions? (a/r)"
     read answer
