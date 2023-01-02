@@ -13,7 +13,7 @@ MenuFunction(){
 declare x
 while [[ $x != "ex" ]];
 do
-    
+    updatedb
     clear
     echo "##########################################################################"
     echo "                              SYSTEM MANAGER                              "
@@ -446,7 +446,7 @@ while [[ $yesOrNo != "y" ]];
 do
 echo "Which folder would you like to view? "
 read folder
-local FolderDirectory=$(find / -type d -name $folder)
+local FolderDirectory=$(find / -type d -name $folder -print -quit 2>/dev/null)
 clear
 echo $FolderDirectory
 echo -e "Is this the folder you would like to view y/n? " 
