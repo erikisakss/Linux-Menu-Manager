@@ -1,4 +1,6 @@
 #!/bin/bash
+#Skapad av Erik Isaksson & Mika Pärssinen Grupp: C7
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
