@@ -1,2 +1,2 @@
 # CaseLab2
-https://prod.liveshare.vsengsaas.visualstudio.com/join?95E327EEB6FBBD5D161686E9A2454F78A640
+https://prod.liveshare.vsengsaas.visualstudio.com/join?81179C9B45D832BC55202E1627223B868CBE
