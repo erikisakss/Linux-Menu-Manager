@@ -36,8 +36,6 @@ MenuFunction() {
         echo -e "${GREEN}df${NC} - Delete Folder  (Deletes a folder)"
         echo -e "\n${RED}ex${NC} - EXIT           (Exit System Manager)"
 
-        #Maste satta x till nagot annars far den damp i loopen.
-
         echo -e "\nChoose a command: "
         read x
 
@@ -159,7 +157,6 @@ AddUserFunction() {
 ListUserFunction() {
     clear
     echo "List of all users: "
-    #awk -F: '($3>=1000)&&($1!="nobody"){print $1}' /etc/passwd
     awk -F: '($3>=1000)&&($1!="nobody"){print $1}' /etc/passwd
 }
 
@@ -171,7 +168,6 @@ ListUserAttributes() {
     read username
     UserID=$(getent passwd $username | cut -d ":" -f 3)
     GroupID=$(getent passwd $username | cut -d ":" -f 4)
-    #Shows which groups the user is in
     Groups=$(groups $username | cut -d ":" -f 2)
     Comments=$(getent passwd $username | cut -d ":" -f 5)
     HomeDirectory=$(getent passwd $username | cut -d ":" -f 6)
@@ -317,11 +313,7 @@ ViewGroup() {
     echo -e "Pick a group: \n"
     read groupname
     GroupID=$(getent group $groupname | cut -d ":" -f 3)
-    #if statement that checks if the GroupID matches field 4 in /etc/passwd
     PrimaryGroupMember=$(awk -F: -v GroupID=$GroupID '($4==GroupID){print $1}' /etc/passwd | tr '\n' ' ')
-    #Print out the the username if the GroupID matches field 4 in /etc/passwd
-
-    # PrimaryGroupMember=$(grep ":$GroupID:" /etc/passwd | cut -d ":" -f 1)
     GroupMembers=$(getent group $groupname | cut -d ":" -f 4)
     echo -e "\nGroupname: $groupname"
     echo "Group ID: $GroupID"
@@ -636,8 +628,6 @@ FolderModify() {
     read folderNumber
     FolderDirectory=${array[$folderNumber - 1]}
 
-    #Do you want to change permissions for owner, group, others or multiple permissions at once?
-    #Should be in a case
 
     declare answer
     while [[ $answer != "exit" ]]; do
