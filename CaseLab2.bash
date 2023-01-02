@@ -618,6 +618,7 @@ FolderView() {
 }
 
 FolderModify() {
+    clear
     echo "Which folder would you like to view? "
     read folder
     FolderDirectory=$(find / -type d -name $folder 2>/dev/null)
